@@ -8,7 +8,8 @@ import "cropperjs/dist/cropper.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
-import { store } from "@/features/redux/store";
+import { store } from "@/api/store";
+import LoadingWrapper from "@/lib/LoadingWrapper";
 
 const roboto_mono = Roboto_Mono({
   subsets: ["latin"],
@@ -33,7 +34,9 @@ export default function RootLayout({
         className={`min-h-screen bg-background font-sans antialiased ${roboto_mono.variable} ${heebo.variable}`}
       >
         <Provider store={store}>
-          <TooltipProvider>{children}</TooltipProvider>
+          <LoadingWrapper>
+            <TooltipProvider>{children}</TooltipProvider>
+          </LoadingWrapper>
         </Provider>
         <Toaster position="top-center" reverseOrder={false} />
       </body>

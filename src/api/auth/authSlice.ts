@@ -1,12 +1,12 @@
 "use client";
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AuthState } from "./authType";
+import { AuthState } from "../featuresType";
 
 const initialState: AuthState = {
-  token: "",
+  token: null,
   user: null,
-  accessToken: "",
+  accessToken: null,
   isAuth: false,
 };
 
@@ -19,7 +19,7 @@ const authSlice = createSlice({
     },
     userSignin: (
       state,
-      action: PayloadAction<{ accessToken: string; user: string }>
+      action: PayloadAction<{ accessToken: string; user: any }>
     ) => {
       state.accessToken = action.payload.accessToken;
       state.user = action.payload.user;
@@ -28,7 +28,6 @@ const authSlice = createSlice({
     userLogout: (state) => {
       state.accessToken = "";
       state.user = "";
-      state.isAuth = false;
     },
   },
 });

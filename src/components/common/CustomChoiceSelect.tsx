@@ -4,7 +4,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Label } from "../ui/label";
 import { X } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import toast from "react-hot-toast";
 
 export interface Option {

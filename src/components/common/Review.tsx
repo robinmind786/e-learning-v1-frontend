@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 interface ReviewProps {
   rating: number | undefined;
@@ -11,31 +11,46 @@ const Review: React.FC<ReviewProps> = ({
   isStar = true,
   totalReview,
 }) => {
-  const stars = [];
+  const stars = useMemo(() => {
+    const starsArray = [];
+    const ratingNumber = parseFloat(rating.toString());
+    const formattedRating = Number.isInteger(ratingNumber)
+      ? ratingNumber.toFixed(1)
+      : ratingNumber.toString();
 
-  const ratingNumber = parseFloat(rating.toString());
-  const formattedRating = Number.isInteger(ratingNumber)
-    ? ratingNumber.toFixed(1)
-    : ratingNumber.toString();
+    for (let i = 0; i < Math.floor(ratingNumber); i++) {
+      starsArray.push(
+        <i key={`star-${i}`} className="fa fa-star !text-yellow-500" />
+      );
+    }
 
-  for (let i = 0; i < Math.floor(ratingNumber); i++) {
-    stars.push(<i key={i} className="fa fa-star !text-yellow-500" />);
-  }
+    if (ratingNumber % 1 !== 0) {
+      starsArray.push(
+        <i
+          key={`star-half`}
+          className="fa fa-star-half-stroke !text-yellow-500"
+        />
+      );
+    }
 
-  if (ratingNumber % 1 !== 0) {
-    stars.push(
-      <i
-        key={stars.length}
-        className="fa fa-star-half-stroke !text-yellow-500"
-      />
-    );
-  }
+    while (starsArray.length < 5) {
+      starsArray.push(
+        <i
+          key={`star-empty-${starsArray.length}`}
+          className="far fa-star !text-yellow-500"
+        />
+      );
+    }
 
-  while (stars.length < 5) {
-    stars.push(
-      <i key={stars.length} className="far fa-star !text-yellow-500" />
-    );
-  }
+    return starsArray;
+  }, [rating]);
+
+  const formattedRating = useMemo(() => {
+    const ratingNumber = parseFloat(rating.toString());
+    return Number.isInteger(ratingNumber)
+      ? ratingNumber.toFixed(1)
+      : ratingNumber.toString();
+  }, [rating]);
 
   return (
     <React.Fragment>
@@ -43,7 +58,7 @@ const Review: React.FC<ReviewProps> = ({
         {isStar &&
           stars.map((star, index) => (
             <li
-              key={index}
+              key={`star-item-${index}`}
               className="inline-block font-normal text-sm mr-2 text-warning"
             >
               {star}

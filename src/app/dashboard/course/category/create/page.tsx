@@ -11,9 +11,7 @@ export const metadata: Metadata = {
 const page = () => {
   return (
     <>
-      <DLayout>
-        <CategoryCreate isCreate={true} />
-      </DLayout>
+      <DLayout>d</DLayout>
     </>
   );
 };

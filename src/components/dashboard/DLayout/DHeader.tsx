@@ -23,23 +23,23 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ILinks, ISidebarLink, sidebarLink } from "./DSidebar";
 
 const DHeader = () => {
-  const [isScrollY, setIsScrollY] = useState<boolean>(false);
+  // const [isScrollY, setIsScrollY] = useState<boolean>(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 120) {
-        setIsScrollY(true);
-      } else {
-        setIsScrollY(false);
-      }
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (window.scrollY > 120) {
+  //       setIsScrollY(true);
+  //     } else {
+  //       setIsScrollY(false);
+  //     }
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
+  //   window.addEventListener("scroll", handleScroll);
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
 
   return (
     <>
