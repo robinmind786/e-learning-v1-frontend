@@ -1,5 +1,6 @@
 import DLayout from "@/components/dashboard/DLayout/DLayout";
 import CategoryCreate from "@/components/filters/CategoryCreate";
+import AdminProtect from "@/hooks/useAdminProtect";
 import { Metadata } from "next";
 import React from "react";
 
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
 const page = () => {
   return (
     <>
-      <DLayout>d</DLayout>
+      <AdminProtect>
+        <DLayout>d</DLayout>
+      </AdminProtect>
     </>
   );
 };

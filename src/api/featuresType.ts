@@ -1,24 +1,26 @@
 export interface IUser {
-  sessionUser: {
-    _id?: any;
-    fname?: string;
-    lname?: string;
-    email?: string;
-    phone?: string;
-    bio?: string;
-    location?: string;
-    protfilo?: string;
-    avatar?: string;
-    password?: string;
-    role?: "user" | "instructor" | "admin";
-    isVerified?: boolean;
-    isSocial?: boolean;
-    education?: any[];
-    socialProfile?: any;
-    courses?: any;
-    createdAt?: Date;
-    updatedAt?: Date;
-  };
+  _id?: any;
+  fname?: string;
+  lname?: string;
+  email?: string;
+  phone?: string;
+  bio?: string;
+  location?: string;
+  protfilo?: string;
+  avatar?: string;
+  password?: string;
+  role?: "user" | "instructor" | "admin";
+  isVerified?: boolean;
+  isSocial?: boolean;
+  education?: any[];
+  socialProfile?: any;
+  courses?: any;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ILoadUser {
+  sessionUser: IUser;
   accessToken: string;
 }
 
@@ -63,4 +65,9 @@ export interface ISigninResponse {
 export interface ISigninRequuest {
   email: string;
   password: string;
+}
+
+export interface ISignoutResponse {
+  status?: boolean;
+  message: string;
 }

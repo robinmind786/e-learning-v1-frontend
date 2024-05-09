@@ -6,10 +6,11 @@ import {
   IResponse,
   ISigninRequuest,
   ISigninResponse,
+  ISignoutResponse,
   ISignupRequuest,
   ISignupResponse,
 } from "../featuresType";
-import { userSignin, userSignup } from "./authSlice";
+import { userLogout, userSignin, userSignup } from "./authSlice";
 
 export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -62,8 +63,27 @@ export const authApi = apiSlice.injectEndpoints({
         }
       },
     }),
+
+    userLogout: builder.query<ISignoutResponse, void>({
+      query: () => ({
+        url: "/user/logout",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          dispatch(userLogout());
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    }),
   }),
 });
 
-export const { useSignupMutation, useConfirmationMutation, useSigninMutation } =
-  authApi;
+export const {
+  useSignupMutation,
+  useConfirmationMutation,
+  useSigninMutation,
+  useUserLogoutQuery,
+} = authApi;

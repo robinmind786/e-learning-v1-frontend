@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Card,
@@ -10,8 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LocateFixed, LocateIcon, Mail, Phone, UserSearch } from "lucide-react";
+import useUser from "@/hooks/useUser";
 
 const ProfileInfo = () => {
+  const user = useUser();
+
   return (
     <>
       <div className="grid grid-cols-3 gap-6">
@@ -25,21 +30,21 @@ const ProfileInfo = () => {
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <CardTitle className="text-base">Robin Mind</CardTitle>
-              <CardDescription>Admin</CardDescription>
+              <CardTitle className="text-base">{user?.fname}</CardTitle>
+              <CardDescription>{user?.role}</CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="space-y-3">
                 <li className="flex items-center justify-between">
                   <Mail className="size-4" />
                   <h6 className="text-sm font-medium leading-none">
-                    robin.rh656@gmail.com
+                    {user?.email}
                   </h6>
                 </li>
                 <li className="flex items-center justify-between">
                   <Phone className="size-4" />
                   <h6 className="text-sm font-medium leading-none">
-                    01763409484
+                    {user?.phone}
                   </h6>
                 </li>
                 <li className="flex items-center justify-between">
@@ -51,7 +56,7 @@ const ProfileInfo = () => {
                 <li className="flex items-center justify-between">
                   <UserSearch className="size-4" />
                   <h6 className="text-sm font-medium leading-none">
-                    domain.com
+                    {user?.protfilo}
                   </h6>
                 </li>
               </ul>

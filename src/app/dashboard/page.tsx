@@ -1,6 +1,7 @@
 import React from "react";
 import DLayout from "@/components/dashboard/DLayout/DLayout";
 import { Metadata } from "next";
+import AdminProtect from "@/hooks/useAdminProtect";
 
 export const metadata: Metadata = {
   title: "Welcome to lms-v1 dashboard",
@@ -10,9 +11,11 @@ export const metadata: Metadata = {
 const page = () => {
   return (
     <>
-      <DLayout>
-        <div>okdnf</div>
-      </DLayout>
+      <AdminProtect>
+        <DLayout>
+          <div>okdnf</div>
+        </DLayout>
+      </AdminProtect>
     </>
   );
 };

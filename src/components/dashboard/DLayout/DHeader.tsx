@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ILinks, ISidebarLink, sidebarLink } from "./DSidebar";
+import { useUserLogoutQuery } from "@/api/auth/authApi";
+import { redirect } from "next/navigation";
 
 const DHeader = () => {
   // const [isScrollY, setIsScrollY] = useState<boolean>(false);
@@ -40,6 +42,19 @@ const DHeader = () => {
   //     window.removeEventListener("scroll", handleScroll);
   //   };
   // }, []);
+  const [logout, setLogout] = useState(false);
+  const {} = useUserLogoutQuery(undefined, {
+    skip: logout ? false : true,
+  });
+
+  const handleLogout = async () => {
+    try {
+      setLogout(true);
+      redirect("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
     <>
@@ -147,7 +162,7 @@ const DHeader = () => {
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuItem disabled>API</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               Log out
               <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
             </DropdownMenuItem>

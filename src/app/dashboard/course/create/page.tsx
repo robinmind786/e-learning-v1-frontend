@@ -1,5 +1,6 @@
 import CourseCreate from "@/components/course/CourseCreate";
 import DLayout from "@/components/dashboard/DLayout/DLayout";
+import AdminProtect from "@/hooks/useAdminProtect";
 import { Metadata } from "next";
 import React from "react";
 
@@ -11,9 +12,11 @@ export const metadata: Metadata = {
 const page = () => {
   return (
     <>
-      <DLayout>
-        <CourseCreate isCreate={false} />
-      </DLayout>
+      <AdminProtect>
+        <DLayout>
+          <CourseCreate isCreate={false} />
+        </DLayout>
+      </AdminProtect>
     </>
   );
 };

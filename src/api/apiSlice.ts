@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { userSignin } from "./auth/authSlice";
-import { IUser } from "./featuresType";
+import { ILoadUser } from "./featuresType";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -16,7 +16,7 @@ export const apiSlice = createApi({
       }),
     }),
 
-    loadUser: builder.query<IUser, void>({
+    loadUser: builder.query<ILoadUser, void>({
       query: () => ({
         url: "/user/me",
         method: "GET",

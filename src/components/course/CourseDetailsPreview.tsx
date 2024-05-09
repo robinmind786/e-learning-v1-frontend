@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Benefit,
   CourseData,
@@ -12,6 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { formatNumber } from "@/utils/formatNumber";
+import { format as Dateformatter } from "timeago.js";
+import { format } from "date-fns";
 import {
   Accordion,
   AccordionContent,
@@ -32,14 +34,14 @@ import Review from "../common/Review";
 interface CourseDetailsPreview {
   data: CourseData | undefined;
   isPreview?: boolean;
-  active?: number | undefined;
-  setActive?: React.Dispatch<React.SetStateAction<number>> | undefined;
+  active: number;
+  setActive: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const CourseDetailsPreview: React.FC<CourseDetailsPreview> = ({
   data,
   isPreview,
-  active = 1,
+  active,
   setActive,
 }) => {
   return (
@@ -84,9 +86,9 @@ const CourseDetailsPreview: React.FC<CourseDetailsPreview> = ({
                       <i className="fa-solid fa-seal-exclamation mr-2.5 !text-red-500" />
                       <span>
                         Last updated{" "}
-                        {/* {data?.updatedAt
+                        {data?.updatedAt
                           ? Dateformatter(data?.updatedAt)
-                          : "yyyy-MM-dd"} */}
+                          : format(new Date(), "yyyy-MM-dd")}
                       </span>
                     </li>
 
@@ -389,7 +391,7 @@ const CourseDetailsPreview: React.FC<CourseDetailsPreview> = ({
           </div>
         </div>
       </section>
-      {isPreview && setActive && (
+      {isPreview && (
         <div className="flex items-center justify-between">
           <Button onClick={() => setActive(active - 1)}>Previous</Button>
           <Button>Create</Button>
