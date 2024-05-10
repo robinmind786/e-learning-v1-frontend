@@ -68,6 +68,23 @@ const Signin = () => {
   });
 
   const { errors, touched, values, handleChange, handleSubmit } = formik;
+
+  const handleGoogleAuth = () => {
+    try {
+      window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/user/auth/google`;
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  const handleGithubAuth = () => {
+    try {
+      window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/user/auth/github`;
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div className="w-full lg:grid lg:grid-cols-2 min-h-screen h-full">
@@ -116,10 +133,20 @@ const Signin = () => {
                     "Signup"
                   )}
                 </Button>
-                <Button variant="outline" className="w-full" type="button">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  type="button"
+                  onClick={handleGoogleAuth}
+                >
                   Sign up with Google
                 </Button>
-                <Button variant="outline" className="w-full" type="button">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  type="button"
+                  onClick={handleGithubAuth}
+                >
                   Sign up with GitHub
                 </Button>
               </div>

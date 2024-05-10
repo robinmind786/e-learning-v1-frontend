@@ -33,6 +33,7 @@ const navigation = [
 
 const Header: React.FC = () => {
   const user = useUser();
+
   return (
     <React.Fragment>
       <header className="sticky top-0 bg-[#020817] z-50 border-b">
