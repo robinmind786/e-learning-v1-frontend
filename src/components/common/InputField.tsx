@@ -31,7 +31,7 @@ const InputField: React.FC<InputFieldProps> = ({
 }) => {
   return (
     <React.Fragment>
-      <div className="grid w-full items-center gap-1.5">
+      <div className="grid w-full items-center gap-3">
         <Label htmlFor={id} className="capitalize">
           {label}
         </Label>
@@ -45,7 +45,7 @@ const InputField: React.FC<InputFieldProps> = ({
           disabled={disabled}
         />
         {error && touched && (
-          <p className="text-sm text-red-600 mt-1.5">{error}</p>
+          <p className="text-sm text-red-600 -mt-2">{error}</p>
         )}
       </div>
     </React.Fragment>

@@ -2,6 +2,15 @@
 
 import React, { useState } from "react";
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -9,7 +18,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { coursedata, stepperOptions } from "./data";
 import {
   Benefit,
   CourseData,
@@ -18,15 +26,11 @@ import {
   Lecture,
   Prerequisite,
 } from "./courseType";
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { coursedata, stepperOptions } from "./data";
 import Stepper from "../common/Stepper";
 import CourseDetailsForm from "./CourseDetailsForm";
 import CourseMediaForm from "./CourseMediaForm";
 import CourseLecturesForm from "./CourseLecturesForm";
-import CourseFaqForm from "./CourseFaqForm";
-import CourseOptionsForm from "./CourseOptionsForm";
-import CourseDetailsPreview from "./CourseDetailsPreview";
-import CreatedSuccess from "./CourseUtils/CreatedSuccess";
 
 interface CourseCreateProps {
   isCreate?: boolean;
@@ -34,7 +38,7 @@ interface CourseCreateProps {
 
 const CourseCreate: React.FC<CourseCreateProps> = ({ isCreate = true }) => {
   const [data, setData] = useState<CourseData>(coursedata);
-  const [active, setActive] = useState<number>(1);
+  const [active, setActive] = useState<number>(3);
   const [courseDetails, setCourseDetails] = useState<CourseDetails>(
     isCreate
       ? {
@@ -103,7 +107,7 @@ const CourseCreate: React.FC<CourseCreateProps> = ({ isCreate = true }) => {
   };
 
   return (
-    <>
+    <div className="grid grid-cols-1 gap-4">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -119,18 +123,18 @@ const CourseCreate: React.FC<CourseCreateProps> = ({ isCreate = true }) => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <Card>
-        <CardHeader className="max-sm:p-3">
-          <Stepper active={active} options={stepperOptions} />
-        </CardHeader>
-        <CardContent className="max-sm:px-3">
+
+      <div className="grid grid-cols-5 max-lg:grid-cols-3 gap-4">
+        <Card
+          className="col-span-4 max-lg:col-span-2 max-md:col-span-3 self-start"
+          x-chunk="dashboard-05-chunk-0"
+        >
           {active === 1 && (
             <CourseDetailsForm
               courseDetails={courseDetails}
               setCourseDetails={setCourseDetails}
               active={active}
               setActive={setActive}
-              isCreate={isCreate}
             />
           )}
           {active === 2 && (
@@ -149,38 +153,17 @@ const CourseCreate: React.FC<CourseCreateProps> = ({ isCreate = true }) => {
               setActive={setActive}
             />
           )}
-          {active === 4 && (
-            <CourseFaqForm
-              courseFaq={courseFaq}
-              setCourseFaq={setCourseFaq}
-              active={active}
-              setActive={setActive}
-              isCreate={isCreate}
-            />
-          )}
-          {active === 5 && (
-            <CourseOptionsForm
-              benefits={benefits}
-              setBenefits={setBenefits}
-              prerequisite={prerequisite}
-              setPrerequisite={setPrerequisite}
-              active={active}
-              setActive={setActive}
-              handleCourseSubmit={handleCourseSubmit}
-            />
-          )}
-          {active === 6 && (
-            <CourseDetailsPreview
-              data={data}
-              isPreview={true}
-              active={active}
-              setActive={setActive}
-            />
-          )}
-          {active === 7 && <CreatedSuccess />}
-        </CardContent>
-      </Card>
-    </>
+        </Card>
+        <Card
+          className="col-span-1 max-lg:col-span-1 max-md:col-span-3 max-md:order-first self-start"
+          x-chunk="dashboard-05-chunk-0"
+        >
+          <CardContent className="pt-6 pb-0">
+            <Stepper active={active} options={stepperOptions} />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 };
 

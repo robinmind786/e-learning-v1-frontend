@@ -65,7 +65,7 @@ const CustomChoiceSelect: React.FC<CustomCreatableSelectProps> = ({
 
   return (
     <React.Fragment>
-      <div className="grid w-full items-center gap-1.5">
+      <div className="grid w-full items-center gap-3">
         <Label htmlFor={id} className="capitalize">
           {selectLabel}
         </Label>

@@ -25,7 +25,7 @@ const TextAreaField: React.FC<TextAreaFieldProps> = ({
 }) => {
   return (
     <React.Fragment>
-      <div className="grid w-full gap-1.5">
+      <div className="grid w-full gap-3">
         <Label htmlFor={id}>{label}</Label>
         <Textarea
           name={name}
@@ -34,7 +34,7 @@ const TextAreaField: React.FC<TextAreaFieldProps> = ({
           onChange={handleChange}
         />
         {error && touched && (
-          <p className="text-sm text-red-600 mt-2">{error}</p>
+          <p className="text-sm text-red-600 -mt-2">{error}</p>
         )}
       </div>
     </React.Fragment>

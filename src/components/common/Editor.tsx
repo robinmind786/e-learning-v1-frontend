@@ -37,7 +37,7 @@ const Editor: React.FC<EditorProps> = memo(
     };
 
     return (
-      <div className="grid w-full items-center gap-1.5 rounded-lg">
+      <div className="grid w-full items-center gap-3 rounded-lg">
         <Label className="capitalize">{label}</Label>
         <QuillEditor
           theme="snow"
@@ -50,7 +50,7 @@ const Editor: React.FC<EditorProps> = memo(
           className="text-foreground"
         />
         {error && touched && (
-          <p className="text-sm text-red-600 mt-2">{error}</p>
+          <p className="text-sm text-red-600 -mt-2">{error}</p>
         )}
       </div>
     );

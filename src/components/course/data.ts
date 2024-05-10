@@ -170,12 +170,12 @@ export const coursedata: CourseData = {
 };
 
 export const stepperOptions: string[] = [
-  "Details",
-  "Media",
-  "Lectures",
-  "FAQ",
-  "Options",
-  "Preview",
+  "Course Details",
+  "Course Media",
+  "Course Lectures",
+  "Course FAQ",
+  "Course Options",
+  "Course Preview",
 ];
 
 export interface SelectionOption {

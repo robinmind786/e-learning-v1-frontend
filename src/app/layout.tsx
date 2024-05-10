@@ -2,14 +2,13 @@
 
 import { Heebo, Roboto_Mono } from "next/font/google";
 import "./globals.css";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
 import "./../assets/css/all.min.css";
 import "react-quill/dist/quill.snow.css";
 import "cropperjs/dist/cropper.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "react-hot-toast";
-import { Provider } from "react-redux";
-import { store } from "@/api/store";
-import LoadingWrapper from "@/lib/LoadingWrapper";
 
 const roboto_mono = Roboto_Mono({
   subsets: ["latin"],
@@ -33,11 +32,7 @@ export default function RootLayout({
       <body
         className={`min-h-screen bg-background font-sans antialiased ${roboto_mono.variable} ${heebo.variable}`}
       >
-        <Provider store={store}>
-          <LoadingWrapper>
-            <TooltipProvider>{children}</TooltipProvider>
-          </LoadingWrapper>
-        </Provider>
+        <TooltipProvider>{children}</TooltipProvider>
         <Toaster position="top-center" reverseOrder={false} />
       </body>
     </html>
