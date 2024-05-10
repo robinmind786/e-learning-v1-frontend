@@ -1,4 +1,7 @@
+"use client";
+
 import React, { ReactNode } from "react";
+import { Edit, Lock, Settings, SquareUserRound, User } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,11 +10,18 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookUser, Lock, Settings, SquareUserRound, User } from "lucide-react";
 import ProfileInfo from "./ProfileInfo";
-import ProfileSettings from "./ProfileSettings";
 
 interface ITabBtn {
   id: number;
@@ -27,8 +37,8 @@ const tabBtn: ITabBtn[] = [
   },
   {
     id: 1,
-    text: "Personal",
-    icon: <BookUser className="mr-2 size-4" />,
+    text: "Edit Profile",
+    icon: <Edit className="mr-2 size-4" />,
   },
   {
     id: 2,
@@ -50,43 +60,38 @@ const tabBtn: ITabBtn[] = [
 const Profile = () => {
   return (
     <>
-      <Breadcrumb>
+      <Breadcrumb className="hidden md:flex">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link href="#">Dashboard</Link>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/user">User</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link href="#">Orders</Link>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Profile</BreadcrumbPage>
+            <BreadcrumbPage>Recent Orders</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-
       <Tabs defaultValue="Profile">
-        <Card>
-          <CardHeader>
-            <TabsList className="justify-start">
-              {tabBtn.map((item: ITabBtn, index: number) => (
-                <TabsTrigger value={item.text} key={index}>
-                  {item.icon}
-                  {item.text}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </CardHeader>
-          <CardContent>
-            <TabsContent value="Profile">
-              <ProfileInfo />
-            </TabsContent>
-            <TabsContent value="Settings">
-              <ProfileSettings />
-            </TabsContent>
-          </CardContent>
-        </Card>
+        <div className="flex items-center">
+          <TabsList>
+            {tabBtn.map((item: ITabBtn, index: number) => (
+              <TabsTrigger value={item.text} key={index}>
+                {item.text}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
+        <TabsContent value="Profile">
+          <ProfileInfo />
+        </TabsContent>
       </Tabs>
     </>
   );

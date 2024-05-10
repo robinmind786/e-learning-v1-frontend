@@ -25,12 +25,6 @@ export const store = configureStore({
 
 const initializeApp = (): AppThunk => async (dispatch) => {
   await dispatch(
-    apiSlice.endpoints.refreshToken.initiate(undefined, {
-      forceRefetch: true,
-    })
-  );
-
-  await dispatch(
     apiSlice.endpoints.loadUser.initiate(undefined, {
       forceRefetch: true,
     })

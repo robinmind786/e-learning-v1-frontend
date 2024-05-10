@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { CircleUser, LogIn, Menu, Package2, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import logo from "../../assets/images/logo-light.svg";
 import Image from "next/image";
 import useUser from "@/hooks/useUser";
+import { useUserLogoutQuery } from "@/api/auth/authApi";
+import { redirect, useRouter } from "next/navigation";
 
 const navigation = [
   { name: "Product", href: "#" },
@@ -33,6 +35,30 @@ const navigation = [
 
 const Header: React.FC = () => {
   const user = useUser();
+  const router = useRouter();
+
+  const [logout, setLogout] = useState(false);
+  const { isSuccess } = useUserLogoutQuery(undefined, {
+    skip: logout ? false : true,
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.push("/");
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+    }
+  }, [isSuccess, router]);
+
+  const handleLogout = async () => {
+    try {
+      setLogout(true);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -106,7 +132,18 @@ const Header: React.FC = () => {
                       size="icon"
                       className="rounded-full"
                     >
-                      <CircleUser className="h-5 w-5" />
+                      {user.avatar ? (
+                        <Image
+                          src={user.avatar.url}
+                          alt="user"
+                          className="rounded-full ring-2 ring-blue-600"
+                          width={100}
+                          height={100}
+                          priority
+                        />
+                      ) : (
+                        <CircleUser className="h-5 w-5" />
+                      )}
                       <span className="sr-only">Toggle user menu</span>
                     </Button>
                   </DropdownMenuTrigger>
@@ -160,7 +197,7 @@ const Header: React.FC = () => {
                     <DropdownMenuItem>Support</DropdownMenuItem>
                     <DropdownMenuItem disabled>API</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout}>
                       Log out
                       <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
                     </DropdownMenuItem>

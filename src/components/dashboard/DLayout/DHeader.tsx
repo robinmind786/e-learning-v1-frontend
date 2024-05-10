@@ -58,7 +58,7 @@ const DHeader = () => {
 
   return (
     <>
-      <header className="flex h-14 items-center gap-4 border-b px-4 lg:px-6 sticky top-0 bg-[#0d1526] z-50">
+      <header className="flex h-14 items-center gap-4 border-b px-4 lg:px-6 sticky top-0 bg-white dark:bg-[#0d1526] z-50">
         <Sheet>
           <SheetTrigger asChild>
             <Button

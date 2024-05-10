@@ -7,7 +7,9 @@ export interface IUser {
   bio?: string;
   location?: string;
   protfilo?: string;
-  avatar?: string;
+  avatar?: {
+    url: string;
+  };
   password?: string;
   role?: "user" | "instructor" | "admin";
   isVerified?: boolean;
