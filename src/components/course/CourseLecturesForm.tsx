@@ -1,46 +1,40 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import {
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import {
+  ChevronDown,
+  ChevronUp,
+  Edit,
+  File,
+  MessageSquareX,
+  Pen,
+  PenIcon,
+  PlayIcon,
+  Plus,
+  Trash,
+  Trash2,
+  X,
+} from "lucide-react";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import dynamic from "next/dynamic";
+import { Label } from "../ui/label";
 import { Lecture } from "./courseType";
+const QuillEditor = dynamic(() => import("react-quill"), { ssr: false });
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-import { Button } from "@/components/ui/button";
-import {
-  ArrowBigLeft,
-  ArrowBigRight,
-  Edit,
-  MessageSquareX,
-  PlayIcon,
-  Plus,
-  Trash2,
-} from "lucide-react";
-
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import toast from "react-hot-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import toast from "react-hot-toast";
 
 interface CourseLecturesFormProps {
   courseLectres: Lecture[];
@@ -55,6 +49,27 @@ const CourseLecturesForm: React.FC<CourseLecturesFormProps> = ({
   active,
   setActive,
 }) => {
+  const [value, setValue] = useState("");
+  const [openSection, setOpenSection] = useState<boolean[]>(
+    courseLectres.map(() => true)
+  );
+  const [editLecture, setEditLecture] = useState<boolean[][]>(
+    courseLectres.map((item) => item.videoUrl.map(() => true))
+  );
+
+  const toggleSection = (index: number) => {
+    const updatedOpenSection = [...openSection];
+    updatedOpenSection[index] = !updatedOpenSection[index];
+    setOpenSection(updatedOpenSection);
+  };
+
+  const toggleEditLecture = (sectionIndex: number, lectureIndex: number) => {
+    const updatedEditLecture = [...editLecture];
+    updatedEditLecture[sectionIndex][lectureIndex] =
+      !updatedEditLecture[sectionIndex][lectureIndex];
+    setEditLecture(updatedEditLecture);
+  };
+
   const handleNewLecture = () => {
     const lastLecture = courseLectres[courseLectres.length - 1];
 
@@ -179,436 +194,272 @@ const CourseLecturesForm: React.FC<CourseLecturesFormProps> = ({
     }
   };
 
-  const [openSection, setOpenSection] = React.useState<boolean>(false);
-  const [openCourseVideoDialog, setOpenCourseVideoDialog] =
-    React.useState<boolean>(false);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setOpenSection(false);
-    toast.success("Section submitted successfully! 🎉");
-  };
-
-  const handleVideoSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setOpenCourseVideoDialog(false);
-    toast.success("Video details saved successfully! 📹");
-  };
-
   return (
     <>
-      <React.Fragment>
-        <CardHeader>
-          <CardTitle>Course Lectures</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 gap-3">
-            <form>
-              <Accordion
-                type="single"
-                collapsible
-                className="w-full space-y-5 "
-              >
-                {courseLectres.map((item: Lecture, index: number) => (
-                  <React.Fragment key={index}>
-                    <div className="flex items-center">
-                      <div className="self-start">
-                        <Dialog
-                          open={openSection}
-                          onOpenChange={setOpenSection}
-                        >
-                          <DialogTrigger asChild>
-                            <Button type="button" variant="outline">
-                              <Edit className="size-4" />
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="sm:max-w-[425px] max-sm:w-11/12 rounded-lg">
-                            <DialogHeader>
-                              <DialogTitle>Add Video Section</DialogTitle>
-                              <DialogDescription>
-                                Make changes video section here. Click save when
-                                you&apos;re done.
-                              </DialogDescription>
-                            </DialogHeader>
-                            <form onSubmit={handleSubmit}>
-                              <div className="grid gap-4 py-4">
-                                <div className="grid grid-cols-1 items-center gap-3">
-                                  <Label htmlFor="name">Section Name</Label>
-                                  <Input
-                                    id="name"
-                                    value={item.videoSection}
-                                    onChange={(e) => {
-                                      const updatedData = [...courseLectres];
-                                      updatedData[index].videoSection =
-                                        e.target.value;
-                                      setCourseLectures(updatedData);
-                                    }}
-                                    className="col-span-3"
+      <CardHeader className="pb-3">
+        <CardTitle>Curriculum</CardTitle>
+        <CardDescription>
+          Start putting together your course by creating sections, lectures and
+          practice (quizzes, coding exercises and assignments).
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid grid-cols-1 gap-4">
+        <Accordion type="single" collapsible className="w-full space-y-4">
+          {courseLectres.map((item: Lecture, index: number) => (
+            <div key={index}>
+              <div className="flex items-center gap-4">
+                <Button
+                  size="icon"
+                  variant="outline"
+                  onClick={() => toggleSection(index)}
+                  className="self-start"
+                >
+                  <Pen className="size-4" />
+                </Button>
+                <AccordionItem
+                  value={`item-${index}`}
+                  className="flex-1 border-none"
+                >
+                  {openSection[index] && (
+                    <AccordionTrigger className="bg-muted/40 rounded-md hover:no-underline w-full px-4 py-2 h-10 border">
+                      {item.videoSection}
+                    </AccordionTrigger>
+                  )}
+                  {!openSection[index] && (
+                    <Input
+                      value={item.videoSection}
+                      onChange={(e) => {
+                        const updatedData = [...courseLectres];
+                        updatedData[index].videoSection = e.target.value;
+                        setCourseLectures(updatedData);
+                      }}
+                      placeholder="Enter section name"
+                    />
+                  )}
+                  <AccordionContent className="py-2 px-1.5">
+                    {item.videoUrl.map((url, vIdx) => (
+                      <div key={vIdx}>
+                        <div className="flex items-center justify-between border-b py-2">
+                          {editLecture[index][vIdx] ? (
+                            <div className="flex items-center gap-4 h-10">
+                              <span className="inline-flex size-8 bg-red-500/40 items-center justify-center rounded-full">
+                                <PlayIcon className="size-4 text-red-500" />
+                              </span>
+                              <h6 className="scroll-m-20 text-base font-semibold tracking-tight">
+                                <span className="mr-2">
+                                  {(vIdx + 1).toString().padStart(2, "0")}
+                                </span>
+                                {url.title}
+                              </h6>
+                            </div>
+                          ) : (
+                            <Tabs
+                              defaultValue="videoContent"
+                              className="w-full"
+                            >
+                              <TabsList>
+                                <TabsTrigger value="videoContent">
+                                  Video Content
+                                </TabsTrigger>
+                                <TabsTrigger value="description">
+                                  Description
+                                </TabsTrigger>
+                                <TabsTrigger value="sourceCode">
+                                  Soruce Code
+                                </TabsTrigger>
+                              </TabsList>
+                              <TabsContent value="videoContent">
+                                <div className="flex-1 self-start gap-4 grid">
+                                  <div className="grid w-full items-center gap-3">
+                                    <Label htmlFor="vdoTitle">
+                                      Add Video Title
+                                    </Label>
+                                    <Input
+                                      type="text"
+                                      id="vdoTitle"
+                                      className="w-full"
+                                      placeholder="Enter video title"
+                                      value={item.videoUrl[vIdx].title}
+                                      onChange={(e) => {
+                                        const updatedData = [...courseLectres];
+                                        updatedData[index].videoUrl[
+                                          vIdx
+                                        ].title = e.target.value;
+                                        setCourseLectures(updatedData);
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="grid w-full items-center gap-3">
+                                    <Label htmlFor="vdoLength">
+                                      Add Video length
+                                    </Label>
+                                    <Input
+                                      type="text"
+                                      placeholder="Enter video length"
+                                      value={item.videoUrl[vIdx].videoLenth}
+                                      onChange={(e) => {
+                                        const updatedData = [...courseLectres];
+                                        updatedData[index].videoUrl[
+                                          vIdx
+                                        ].videoLenth = e.target.value;
+                                        setCourseLectures(updatedData);
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="grid w-full items-center gap-3">
+                                    <Label htmlFor="vdoUrl">Video URL</Label>
+                                    <Input
+                                      type="text"
+                                      id="vdoUrl"
+                                      placeholder="Enter video url"
+                                      value={item.videoUrl[vIdx].url}
+                                      onChange={(e) => {
+                                        const updatedData = [...courseLectres];
+                                        updatedData[index].videoUrl[vIdx].url =
+                                          e.target.value;
+                                        setCourseLectures(updatedData);
+                                      }}
+                                    />
+                                  </div>
+                                </div>
+                              </TabsContent>
+                              <TabsContent value="description">
+                                <div className="grid w-full items-center gap-3 rounded-lg">
+                                  <Label className="capitalize">
+                                    Lecture Description
+                                  </Label>
+                                  <QuillEditor
+                                    theme="snow"
+                                    value={value}
+                                    onChange={setValue}
                                   />
                                 </div>
-                              </div>
-                              <DialogFooter>
-                                <Button type="submit">Save changes</Button>
-                              </DialogFooter>
-                            </form>
-                          </DialogContent>
-                        </Dialog>
-                      </div>
-                      <AccordionItem
-                        value={`item-${index + 1}`}
-                        key={index}
-                        className="flex-1 ml-2 border-none"
-                      >
-                        <AccordionTrigger className="bg-muted/40 px-5 py-2.5 rounded-md hover:no-underline w-full max-sm:text-sm max-sm:px-2.5">
-                          {item.videoSection}
-                        </AccordionTrigger>
-                        <AccordionContent className="space-y-5 p-5 max-sm:p-2.5 max-sm:space-y-2.5">
-                          {item.videoUrl.map((url, vIdx) => (
-                            <React.Fragment key={vIdx}>
-                              <div className="flex items-center justify-between border-b pb-5 max-sm:pb-2.5">
-                                <div className="flex items-center gap-3 max-sm:gap-2.5">
-                                  <span className="inline-flex size-7 bg-red-500/40 items-center justify-center rounded-full max-sm:size-6">
-                                    <PlayIcon className="size-4 text-red-500 max-sm:size-3" />
-                                  </span>
-                                  <h6 className="scroll-m-20 text-base font-semibold tracking-tight max-sm:text-xs">
-                                    <span className="mr-2">
-                                      {(vIdx + 1).toString().padStart(2, "0")}
-                                    </span>
-                                    {url.title}
-                                  </h6>
-                                </div>
-                                <div className="flex items-center gap-3 max-sm:2.5">
-                                  <Dialog
-                                    open={openCourseVideoDialog}
-                                    onOpenChange={setOpenCourseVideoDialog}
-                                  >
-                                    <DialogTrigger>
+                              </TabsContent>
+                              <TabsContent value="sourceCode">
+                                <div className="relative space-y-2 mt-6 mx-1">
+                                  {url.links.map((_, lIdx) => (
+                                    <React.Fragment key={lIdx}>
+                                      <div className="grid w-full items-center gap-1.5">
+                                        <div className="flex items-center justify-between">
+                                          <Label htmlFor={`source-${lIdx}`}>
+                                            Link {lIdx + 1}
+                                          </Label>
+                                          <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="icon"
+                                            className={`size-5 ${
+                                              lIdx === 0
+                                                ? "cursor-no-drop"
+                                                : "cursor-pointer"
+                                            }`}
+                                            onClick={() =>
+                                              lIdx === 0
+                                                ? null
+                                                : handleRemoveLink(index, vIdx)
+                                            }
+                                          >
+                                            <MessageSquareX />
+                                          </Button>
+                                        </div>
+                                        <Input
+                                          type="text"
+                                          id={`source-${lIdx}`}
+                                          placeholder="Enter video source title"
+                                          value={
+                                            item.videoUrl[vIdx].links[lIdx]
+                                              .title
+                                          }
+                                          onChange={(e) => {
+                                            const updatedData = [
+                                              ...courseLectres,
+                                            ];
+                                            updatedData[index].videoUrl[
+                                              vIdx
+                                            ].links[lIdx].title =
+                                              e.target.value;
+                                            setCourseLectures(updatedData);
+                                          }}
+                                        />
+                                        <Input
+                                          type="text"
+                                          id={`soruceUrl-${lIdx}`}
+                                          placeholder="Enter video source url"
+                                          value={
+                                            item.videoUrl[vIdx].links[lIdx].url
+                                          }
+                                          onChange={(e) => {
+                                            const updatedData = [
+                                              ...courseLectres,
+                                            ];
+                                            updatedData[index].videoUrl[
+                                              vIdx
+                                            ].links[lIdx].url = e.target.value;
+                                            setCourseLectures(updatedData);
+                                          }}
+                                        />
+                                      </div>
+                                    </React.Fragment>
+                                  ))}
+                                  <div className="flex items-center justify-between mb-6">
+                                    <div className="self-start">
                                       <Button
-                                        variant="outline"
                                         size="icon"
                                         type="button"
-                                        className="py-2.5 max-sm:size-6"
+                                        onClick={() =>
+                                          handleAddLink(index, vIdx)
+                                        }
+                                        className="size-4"
                                       >
-                                        <Edit className="h-4 w-4" />
+                                        <Plus />
                                       </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="sm:max-w-[425px] max-sm:w-11/12 rounded-lg">
-                                      <DialogHeader>
-                                        <DialogTitle>
-                                          Add New Course Video
-                                        </DialogTitle>
-                                        <DialogDescription>
-                                          Fill in the details below to add a new
-                                          video to your course content.
-                                        </DialogDescription>
-                                      </DialogHeader>
-                                      <form
-                                        onSubmit={handleVideoSubmit}
-                                        className="space-y-5 h-full"
-                                      >
-                                        <Tabs defaultValue="videoUrl">
-                                          <TabsList className="grid w-full grid-cols-2">
-                                            <TabsTrigger value="videoUrl">
-                                              Video Details
-                                            </TabsTrigger>
-                                            <TabsTrigger value="soruceCode">
-                                              Soruce Code
-                                            </TabsTrigger>
-                                          </TabsList>
-                                          <TabsContent value="videoUrl">
-                                            <div className="grid grid-cols-1 gap-6">
-                                              <div className="grid w-full items-center gap-3">
-                                                <Label htmlFor="vdoTitle">
-                                                  Add Video Title
-                                                </Label>
-                                                <Input
-                                                  type="text"
-                                                  id="vdoTitle"
-                                                  placeholder="Enter video title"
-                                                  value={
-                                                    item.videoUrl[vIdx].title
-                                                  }
-                                                  onChange={(e) => {
-                                                    const updatedData = [
-                                                      ...courseLectres,
-                                                    ];
-                                                    updatedData[index].videoUrl[
-                                                      vIdx
-                                                    ].title = e.target.value;
-                                                    setCourseLectures(
-                                                      updatedData
-                                                    );
-                                                  }}
-                                                />
-                                              </div>
-                                              <div className="grid grid-cols-2 gap-6 max-sm:grid-cols-1">
-                                                <div className="grid w-full items-center gap-3">
-                                                  <Label htmlFor="vdoLength">
-                                                    Add Video length
-                                                  </Label>
-                                                  <Input
-                                                    type="text"
-                                                    id="vdoLength"
-                                                    placeholder="Enter video length"
-                                                    value={
-                                                      item.videoUrl[vIdx]
-                                                        .videoLenth
-                                                    }
-                                                    onChange={(e) => {
-                                                      const updatedData = [
-                                                        ...courseLectres,
-                                                      ];
-                                                      updatedData[
-                                                        index
-                                                      ].videoUrl[
-                                                        vIdx
-                                                      ].videoLenth =
-                                                        e.target.value;
-                                                      setCourseLectures(
-                                                        updatedData
-                                                      );
-                                                    }}
-                                                  />
-                                                </div>
-                                                <div className="grid w-full items-center gap-3">
-                                                  <Label htmlFor="vdoUrl">
-                                                    Video URL
-                                                  </Label>
-                                                  <Input
-                                                    type="text"
-                                                    id="vdoUrl"
-                                                    placeholder="Enter video url"
-                                                    value={
-                                                      item.videoUrl[vIdx].url
-                                                    }
-                                                    onChange={(e) => {
-                                                      const updatedData = [
-                                                        ...courseLectres,
-                                                      ];
-                                                      updatedData[
-                                                        index
-                                                      ].videoUrl[vIdx].url =
-                                                        e.target.value;
-                                                      setCourseLectures(
-                                                        updatedData
-                                                      );
-                                                    }}
-                                                  />
-                                                </div>
-                                              </div>
-                                              <div className="grid w-full items-center gap-3">
-                                                <Label htmlFor="vdoDescription">
-                                                  Add Video Description
-                                                </Label>
-                                                <Textarea
-                                                  placeholder="Type your video description here."
-                                                  value={
-                                                    item.videoUrl[vIdx]
-                                                      .description
-                                                  }
-                                                  onChange={(e) => {
-                                                    const updatedData = [
-                                                      ...courseLectres,
-                                                    ];
-                                                    updatedData[index].videoUrl[
-                                                      vIdx
-                                                    ].description =
-                                                      e.target.value;
-                                                    setCourseLectures(
-                                                      updatedData
-                                                    );
-                                                  }}
-                                                />
-                                              </div>
-                                            </div>
-                                          </TabsContent>
-
-                                          <div
-                                            className="max-h-[50vh] h-full overflow-y-auto
-  [&::-webkit-scrollbar]:w-2
-  [&::-webkit-scrollbar-track]:rounded-full
-  [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:rounded-full
-  [&::-webkit-scrollbar-thumb]:bg-gray-300
-  dark:[&::-webkit-scrollbar-track]:bg-muted
-  dark:[&::-webkit-scrollbar-thumb]:bg-muted-foreground"
-                                          >
-                                            <TabsContent value="soruceCode">
-                                              <div className="relative space-y-2 mt-6 mx-1">
-                                                {url.links.map((_, lIdx) => (
-                                                  <React.Fragment key={lIdx}>
-                                                    <div className="grid w-full items-center gap-3">
-                                                      <div className="flex items-center justify-between">
-                                                        <Label
-                                                          htmlFor={`source-${lIdx}`}
-                                                        >
-                                                          Link {lIdx + 1}
-                                                        </Label>
-                                                        <Button
-                                                          type="button"
-                                                          variant="outline"
-                                                          size="icon"
-                                                          className={`size-5 ${
-                                                            lIdx === 0
-                                                              ? "cursor-no-drop"
-                                                              : "cursor-pointer"
-                                                          }`}
-                                                          onClick={() =>
-                                                            lIdx === 0
-                                                              ? null
-                                                              : handleRemoveLink(
-                                                                  index,
-                                                                  vIdx
-                                                                )
-                                                          }
-                                                        >
-                                                          <MessageSquareX />
-                                                        </Button>
-                                                      </div>
-                                                      <Input
-                                                        type="text"
-                                                        id={`source-${lIdx}`}
-                                                        placeholder="Enter video source title"
-                                                        value={
-                                                          item.videoUrl[vIdx]
-                                                            .links[lIdx].title
-                                                        }
-                                                        onChange={(e) => {
-                                                          const updatedData = [
-                                                            ...courseLectres,
-                                                          ];
-                                                          updatedData[
-                                                            index
-                                                          ].videoUrl[
-                                                            vIdx
-                                                          ].links[lIdx].title =
-                                                            e.target.value;
-                                                          setCourseLectures(
-                                                            updatedData
-                                                          );
-                                                        }}
-                                                      />
-                                                      <Input
-                                                        type="text"
-                                                        id={`soruceUrl-${lIdx}`}
-                                                        placeholder="Enter video source url"
-                                                        value={
-                                                          item.videoUrl[vIdx]
-                                                            .links[lIdx].url
-                                                        }
-                                                        onChange={(e) => {
-                                                          const updatedData = [
-                                                            ...courseLectres,
-                                                          ];
-                                                          updatedData[
-                                                            index
-                                                          ].videoUrl[
-                                                            vIdx
-                                                          ].links[lIdx].url =
-                                                            e.target.value;
-                                                          setCourseLectures(
-                                                            updatedData
-                                                          );
-                                                        }}
-                                                      />
-                                                    </div>
-                                                  </React.Fragment>
-                                                ))}
-                                                <div className="flex items-center justify-between mb-6">
-                                                  <div className="self-start">
-                                                    <Button
-                                                      size="icon"
-                                                      type="button"
-                                                      onClick={() =>
-                                                        handleAddLink(
-                                                          index,
-                                                          vIdx
-                                                        )
-                                                      }
-                                                      className="size-4"
-                                                    >
-                                                      <Plus />
-                                                    </Button>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </TabsContent>
-                                          </div>
-                                        </Tabs>
-                                        <DialogFooter>
-                                          <Button type="submit">
-                                            Save changes
-                                          </Button>
-                                        </DialogFooter>
-                                      </form>
-                                    </DialogContent>
-                                  </Dialog>
-                                  <Button
-                                    type="button"
-                                    size="icon"
-                                    variant="outline"
-                                    className={`py-2.5 max-sm:size-6 hover:bg-red-500  ${
-                                      vIdx === 0
-                                        ? "cursor-no-drop"
-                                        : "cursor-pointer"
-                                    }`}
-                                    onClick={() =>
-                                      vIdx === 0
-                                        ? null
-                                        : handleRemoveTopic(index, vIdx)
-                                    }
-                                  >
-                                    <Trash2 className="size-4" />
-                                  </Button>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </React.Fragment>
-                          ))}
-                          <div className="flex items-center gap-3">
+                              </TabsContent>
+                            </Tabs>
+                          )}
+                          <div className="flex items-center gap-4 ml-4 self-start">
                             <Button
-                              onClick={() => handleAddTopic(index)}
+                              variant="outline"
+                              size="icon"
                               type="button"
-                              size="sm"
+                              className="py-2.5 max-sm:size-6"
+                              onClick={() => toggleEditLecture(index, vIdx)}
                             >
-                              Add Topic
+                              <Edit className="h-4 w-4" />
                             </Button>
                             <Button
-                              onClick={() => handleDeleteLecture(index)}
                               type="button"
-                              size="sm"
-                              variant="destructive"
-                              className={`${
-                                index > 0 ? "cursor-pointer" : "cursor-no-drop"
+                              size="icon"
+                              variant="outline"
+                              className={`hover:bg-red-500  ${
+                                vIdx === 0 ? "cursor-no-drop" : "cursor-pointer"
                               }`}
+                              onClick={() =>
+                                vIdx === 0
+                                  ? null
+                                  : handleRemoveTopic(index, vIdx)
+                              }
                             >
-                              Delete this Lecture
+                              <Trash2 className="size-4" />
                             </Button>
                           </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </div>
-                  </React.Fragment>
-                ))}
-              </Accordion>
-            </form>
-            <div className="flex items-center justify-end">
-              <Button size="sm" onClick={handleNewLecture} type="button">
-                Add Lecture
-              </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </AccordionContent>
+                </AccordionItem>
+              </div>
             </div>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button onClick={handlePrev}>
-            <ArrowBigLeft className="mr-2 size-4" />
-            Previous
+          ))}
+        </Accordion>
+        <div className="flex items-center justify-end">
+          <Button size="sm" onClick={handleNewLecture} type="button">
+            Add Lecture
           </Button>
-          <Button onClick={handleNext} className="ml-auto">
-            Next
-            <ArrowBigRight className="ml-2 size-4" />
-          </Button>
-        </CardFooter>
-      </React.Fragment>
+        </div>
+      </CardContent>
     </>
   );
 };

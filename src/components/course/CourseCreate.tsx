@@ -31,6 +31,7 @@ import Stepper from "../common/Stepper";
 import CourseDetailsForm from "./CourseDetailsForm";
 import CourseMediaForm from "./CourseMediaForm";
 import CourseLecturesForm from "./CourseLecturesForm";
+import CourseFaqForm from "./CourseFaqForm";
 
 interface CourseCreateProps {
   isCreate?: boolean;
@@ -151,6 +152,15 @@ const CourseCreate: React.FC<CourseCreateProps> = ({ isCreate = true }) => {
               setCourseLectures={setCourseLectures}
               active={active}
               setActive={setActive}
+            />
+          )}
+          {active === 4 && (
+            <CourseFaqForm
+              courseFaq={courseFaq}
+              setCourseFaq={setCourseFaq}
+              active={active}
+              setActive={setActive}
+              isCreate={isCreate}
             />
           )}
         </Card>
